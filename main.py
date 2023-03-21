@@ -84,7 +84,6 @@ if __name__=='__main__':
     profile_photos1 = VK(vk_token, 122024775)
     profile_photos1.get_photo()
     profile_photos1.write_photo('photos_vk_dump.json')
-    # pprint(profile_photos1.instance_vk_json())
 
     upload1 = Yandex(yandex_token)
     upload1.get_headers()
