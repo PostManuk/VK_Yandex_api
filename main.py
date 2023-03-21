@@ -25,7 +25,6 @@ class VK:
 
     def write_photo(self,f_name):
         self.f_name = f_name
-        # images_dict={}
         images=[]
         photos = json.load(open('photos_vk.json'))['response']['items']
         for photo in photos:
