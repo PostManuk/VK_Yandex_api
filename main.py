@@ -1,15 +1,19 @@
 import requests
 from pprint import pprint
 import json
+from tqdm import tqdm,trange
+from time import sleep
+
+
 
 class VK:
 
     def __init__(self,acess_token,user_id):
         self.acess_token = acess_token
-        self.id= user_id
+        self.owner_id= user_id
 
     def get_photo(self):
-        url_vk = requests.get('https://api.vk.com/method/photos.get', params={'owner_id':self.id,
+        url_vk = requests.get('https://api.vk.com/method/photos.get', params={'owner_id':self.owner_id,
                                                                              'access_token': self.acess_token,
                                                                              'v':'5.131',
                                                                              'album_id': 'profile',
@@ -71,17 +75,31 @@ class Yandex:
                   'url': file_url, 'overwrite': 'true'}
         response = requests.post(url, headers=self.get_headers(), params=params)
         if response.status_code == 202:
-            print(f'File {file_name} upload in Yandex folder: {folder_name} ')
+            for i in trange(len(file_name),desc= f'Loading photo - {file_name}',unit = f' Photo-{file_name} has been uploaded to the {folder_name}'):
+                sleep(.1)
+        else:
+            print('Status code is not accepted')
 
 
-if __name__=='__main__':
+def upload (instance_vk):
+    for i in instance_vk['photos']:
+        url_vk = i['url']
+        name_vk_photo=i['file_name']
+        upload1.upload_files_VK(url_vk,name_vk_photo,'new_folder')
+    print()
+    pprint('---Loading completed!---')
+
+
+
+if __name__ == '__main__':
 
     with open('VK_token_id.txt.', encoding='utf-8') as file:
-        vk_token = file.readline().strip()
-        vk_id = file.readline().strip()
+        acess_token_vk = file.readline().strip()
+        user_id = file.readline().strip()
         yandex_token= file.readline().strip()
 
-    profile_photos1 = VK(vk_token, 122024775)
+
+    profile_photos1 = VK(acess_token_vk, user_id)
     profile_photos1.get_photo()
     profile_photos1.write_photo('photos_vk_dump.json')
 
@@ -89,12 +107,5 @@ if __name__=='__main__':
     upload1.get_headers()
     folder_name = 'new_folder'
     upload1.create_folder('new_folder')
-
-
-    def upload(instance_vk):
-        for i in instance_vk['photos']:
-            url_vk = i['url']
-            name_vk_photo=i['file_name']
-            upload1.upload_files_VK(url_vk,name_vk_photo,'new_folder')
 
     upload(profile_photos1.instance_vk_json())
