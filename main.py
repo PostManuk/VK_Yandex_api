@@ -81,11 +81,11 @@ class Yandex:
             print('Status code is not accepted')
 
 
-def upload (instance_vk):
+def upload (instance_vk,upload_files):
     for i in instance_vk['photos']:
         url_vk = i['url']
         name_vk_photo=i['file_name']
-        upload1.upload_files_VK(url_vk,name_vk_photo,'new_folder')
+        upload_files.upload_files_VK(url_vk,name_vk_photo,'new_folder')
     print()
     pprint('---Loading completed!---')
 
@@ -108,4 +108,4 @@ if __name__ == '__main__':
     folder_name = 'new_folder'
     upload1.create_folder('new_folder')
 
-    upload(profile_photos1.instance_vk_json())
+    upload(profile_photos1.instance_vk_json(), upload1)
